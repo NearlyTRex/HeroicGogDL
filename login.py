@@ -7,11 +7,17 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import urllib.parse
+import argparse
 
 # OAuth details
 CLIENT_ID = "46899977096215655"
 CLIENT_SECRET = "9d85c43b1482497dbbce61f6e4aa173a433796eeae2ca8c5f6129f2dc4de46d9"
 REDIRECT_URI = "https://embed.gog.com/on_login_success?origin=client"
+
+# Set up argument parser
+parser = argparse.ArgumentParser(description="Generate a GOG auth.json file.")
+parser.add_argument("output_file", default="auth.json", help="Path to the output auth.json file")
+args = parser.parse_args()
 
 # Step 1: Start Selenium and open the GOG login page
 auth_url = f"https://auth.gog.com/auth?client_id={CLIENT_ID}&redirect_uri={urllib.parse.quote(REDIRECT_URI)}&response_type=code&layout=client2"
@@ -59,10 +65,10 @@ if response.status_code == 200:
         }
     }
 
-    # Step 5: Save the data to auth.json
-    with open("auth.json", "w") as f:
+    # Step 5: Save the data to the specified output file
+    with open(args.output_file, "w") as f:
         json.dump(auth_data, f, indent=4)
-    print(f"Access token and refresh token saved to auth.json.")
+    print(f"Access token and refresh token saved to {args.output_file}.")
 else:
     print(f"Error: Unable to retrieve access token. Status code: {response.status_code}")
     print(response.text)
