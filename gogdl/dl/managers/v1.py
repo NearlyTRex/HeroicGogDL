@@ -21,12 +21,12 @@ class Manager:
         self.arguments = generic_manager.arguments
         self.unknown_arguments = generic_manager.unknown_arguments
         if "path" in self.arguments:
-            self.path = self.arguments.path
+            self.path = self.arguments.path or ""
         else:
             self.path = ""
 
         if "support_path" in self.arguments:
-            self.support = self.arguments.support_path
+            self.support = self.arguments.support_path or ""
         else:
             self.support = ""
 
@@ -83,8 +83,8 @@ class Manager:
         for depot in repository["depots"]:
             if depot["dependencyId"] in self.manifest.dependencies_ids:
                 if not depot["executable"]["path"].startswith("__redist"):
-                    size_data[self.game_id]['*']["download_size"] += depot["compressedSize"]
-                    size_data[self.game_id]['*']["disk_size"] += depot["size"]
+                    size_data[self.game_id]['*']["download_size"] += depot.get("compressedSize") or 0
+                    size_data[self.game_id]['*']["disk_size"] += depot.get("size") or 0
 
         available_branches = set([build["branch"] for build in self.builds["items"] if build["branch"]])
         available_branches_list = [None] + list(available_branches)

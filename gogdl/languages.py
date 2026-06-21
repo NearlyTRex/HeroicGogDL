@@ -15,9 +15,9 @@ class Language:
         # If comparing to string, look for the code, name and deprecated code
         if type(value) is str:
             return (
-                value == self.code
+                value.lower() == self.code.lower()
                 or value.lower() == self.name.lower()
-                or value in self.deprecated_codes
+                or value.lower() in [l.lower() for l in self.deprecated_codes]
             )
         return NotImplemented
 
@@ -29,6 +29,8 @@ class Language:
 
     @staticmethod
     def parse(val: str):
+        if val == '*':
+            return None
         for lang in LANGUAGES:
             if lang == val:
                 return lang
@@ -40,7 +42,7 @@ LANGUAGES = [
     Language("ar", "Arabic", "العربية", []),
     Language("az-AZ", "Azeri", "Azərbaycan­ılı", []),
     Language("be-BY", "Belarusian", "Беларускі", ["be"]),
-    Language("bn-BD", "Bengali", "বাংলা", ["bn_BD"]),
+    Language("bn-BD", "Bengali", "বাং", ["bn_BD"]),
     Language("bg-BG", "Bulgarian", "български", ["bg", "bl"]),
     Language("bs-BA", "Bosnian", "босански", []),
     Language("ca-ES", "Catalan", "Català", ["ca"]),
